@@ -46,12 +46,12 @@ const Build = () => {
 
   return (
     <>
-      <section className="bg-sky-300 min-h-screen flex flex-col justify-center items-center gap-16 px-5 lg:px-32 py-10">
-        <h1 className="text-5xl text-blue-700 font-bold">
-          --------Get Your Vehicle Price--------
+      <section className="bg-sky-300 min-h-screen flex flex-col justify-center items-center gap-16 px-5  py-10">
+        <h1 className="text-3xl md:text-5xl gap-3 flex flex-col lg:flex-row text-blue-700 font-bold">
+          <span>------------------------</span>Get Your Vehicle Price<span>------------------------</span>
         </h1>
         <div className="flex flex-col items-center gap-6 justify-center">
-          <div className="flex flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-8">
             <input
               type="text"
               placeholder="Build Year"
@@ -87,8 +87,10 @@ const Build = () => {
 
         {wholesalePrice && retailPrice && (
           <div>
-          <p className="text-4xl font-bold text-center my-6">Pricing For {Responsemake} {Responsemodel} {ResponsebuildYear}</p>
-          <div className="bg-sky-300 flex flex-row justify-center items-center gap-10 px-5">
+             <h1 className="text-3xl text-center md:text-5xl gap-3 flex flex-col lg:flex-row  font-bold">
+             Pricing For {Responsemake} {Responsemodel} {ResponsebuildYear}
+        </h1>
+          <div className="bg-sky-300 flex flex-col mt-6 md:flex-row justify-center items-center gap-10 px-5">
            
             <div className="flex flex-col items-center gap-6">
               <h1 className="text-2xl md:text-3xl font-bold">Wholesale Value</h1>
