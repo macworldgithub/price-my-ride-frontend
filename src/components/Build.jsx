@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { SERVER_URL } from "../config";
 
 const Build = () => {
   const [buildYear, setBuildYear] = useState("");
@@ -18,18 +19,21 @@ const Build = () => {
   const [wholesalePrice, setWholesalePrice] = useState("");
   const [retailPrice, setRetailPrice] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const getPrice = async () => {
-    if (!buildYear || !make || !model || !odometer || !specs) {
-      toast.error("Please provide all details including Odometer and Specs.");
+    if (!buildYear || !make || !model||!odometer ) {
+      toast.error("Please provide all details including Odometer (Specs is optional).");
       return;
     }
 
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://car-evaluation-backend.vercel.app/api/predict/price",
-        // "http://localhost:1000/api/predict/price",
+        `${SERVER_URL}/api/predict/price`,
         {
           make,
           model,
@@ -40,6 +44,18 @@ const Build = () => {
       );
 
       if (response.data) {
+        await axios.post(
+        `${SERVER_URL}/api/record/create`,
+          {
+            make,
+            model,
+            year: buildYear,
+            odometer,
+            specifications:specs,
+            wholesale:response.data.wholesale_price,
+            retail:response.data.retail_price
+          }
+        );
         setWholesalePrice(response.data.wholesale_price || "N/A");
         setRetailPrice(response.data.retail_price || "N/A");
         setResponseBuildYear(response.data.year || "N/A");
@@ -140,8 +156,59 @@ const Build = () => {
               </p>
             </div>
           </div>
+          <div className="w-ful flex justify-center">
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="mt-5 bg-green-600 cursor-pointer hover:bg-green-700 text-white px-6 py-3 rounded-lg text-xl"
+            >
+            Would you like to sell your vehicle now?
+          </button>
+            </div>
         </div>
       )}
+            {isModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black/80 bg-opacity-90">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[420px]">
+            <h2 className="text-2xl text-center font-bold mb-6">Enter Your Details</h2>
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full py-3 px-4 border rounded mb-3"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full py-3 px-4  border rounded mb-3"
+            />
+            <input
+              type="text"
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full py-3 px-4 border rounded mb-3"
+            />
+            <div className="flex justify-between mt-2">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-red-500 cursor-pointer hover:bg-red-600 text-white px-4 py-2 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </section>
   );
 };
