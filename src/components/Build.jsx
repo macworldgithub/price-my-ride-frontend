@@ -73,6 +73,36 @@ const Build = () => {
       setLoading(false);
     }
   };
+  
+  const SendEmail = async () => {
+    if (!name || !email || !phone||!Responsemodel||!Responsemake||!ResponseOdometer||!ResponsebuildYear||!ResponseSpecs ) {
+      toast.error("Please provide all details including email, phone and name");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${SERVER_URL}/api/email/send`,
+        {
+          name,email,phone,
+          modal:Responsemodel,make:Responsemake,odometer:ResponseOdometer,buildYear:ResponsebuildYear,specs:ResponseSpecs
+        }
+      );
+      setName("")
+      setEmail("")
+      setPhone("")
+      setIsModalOpen(false)
+
+      toast.success("Request Has Been Saved");
+      
+    } catch (error) {
+      console.error("Error fetching car price:", error);
+      toast.error("Error fetching price. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="bg-sky-300 min-h-screen flex flex-col justify-center items-center gap-16 px-5 py-10">
@@ -200,6 +230,7 @@ const Build = () => {
                 Cancel
               </button>
               <button
+              onClick={()=>SendEmail()}
                 className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded"
               >
                 Submit
