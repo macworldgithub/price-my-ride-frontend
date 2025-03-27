@@ -8,11 +8,13 @@ const RecordEntries = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-
+    const token=localStorage.getItem("price-my-ride-x-token")
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${SERVER_URL}/api/record/getAll?page=${page}`);
+      const res = await axios.get(`${SERVER_URL}/api/record/getAll?page=${page}`,{headers:{
+        Authorization: `Bearer ${token}` 
+      }});
       setData(res.data.records);
       setTotal(res.data.total);
     } catch (error) {
@@ -27,7 +29,9 @@ const RecordEntries = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${SERVER_URL}/api/record/delete?id=${id}`);
+      await axios.delete(`${SERVER_URL}/api/record/delete?id=${id}`,{headers:{
+        Authorization: `Bearer ${token}` 
+      }});
       alert("Record deleted successfully");
       fetchData();
     } catch (error) {
