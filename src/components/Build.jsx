@@ -139,7 +139,7 @@ const Build = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           <input
             type="number"
-            placeholder="Odometer (Miles)"
+            placeholder="Odometer (Km)"
             value={odometer}
             onChange={(e) => setOdometer(e.target.value)}
             className="bg-white w-72 sm:w-80 h-14 px-6 text-lg sm:text-2xl rounded-3xl border border-black shadow-lg"
@@ -169,7 +169,7 @@ const Build = () => {
           <h1 className="text-3xl text-center md:text-5xl flex flex-col lg:flex-row font-bold">
             Pricing for {Responsemake} {Responsemodel} {ResponsebuildYear}
           </h1>
-          <p className="text-xl font-bold text-center mt-2">With Mile Driven: {ResponseOdometer} miles</p>
+          <p className="text-xl font-bold text-center mt-2">With Kilometer Driven: {ResponseOdometer} Km</p>
           <p className="text-xl font-bold text-center mt-1">Including Specs: {ResponseSpecs}</p>
 
           <div className="bg-sky-300 flex flex-col mt-6 md:flex-row justify-center items-center gap-10 px-5">
