@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CloseOutlined } from "@ant-design/icons";
 import SellVehicleModal from "./SellVehicleModal";
 
 const VehiclePriceResultModal = ({ isVisible, onClose }) => {
   const [isSellModalVisible, setIsSellModalVisible] = useState(false);
+  const [isVisibleWithAnimation, setIsVisibleWithAnimation] = useState(false);
+
+  // Handle showing the modal with fade-in and slide-up
+  useEffect(() => {
+    if (isVisible) {
+      setIsVisibleWithAnimation(true); // Start the animation when the modal is shown
+    } else {
+      // If modal is hidden, use a timeout to ensure the modal fades out and slides down before removing from DOM
+      setTimeout(() => setIsVisibleWithAnimation(false), 500); // Animation duration must match
+    }
+  }, [isVisible]);
+
+  // Handle the close action with fade-out and slide-down
+  const handleClose = () => {
+    setIsVisibleWithAnimation(false); // Start fade-out and slide-down animation
+    setTimeout(() => {
+      onClose(); // Close modal after the animation
+    }, 500); // Match this with the fade-out duration
+  };
 
   const handleSellVehicleModalOpen = () => {
     setIsSellModalVisible(true);
-    onClose(); // Close this modal when opening Sell modal
+    handleClose(); // Close this modal when opening Sell modal
   };
 
   const handleSellVehicleModalClose = () => {
@@ -17,7 +36,13 @@ const VehiclePriceResultModal = ({ isVisible, onClose }) => {
   return (
     <>
       {isVisible && (
-        <div className="fixed bottom-4 right-4 z-50 w-[360px] max-w-md">
+        <div
+          className={`fixed bottom-4 right-4 z-50 w-[360px] max-w-md transition-all duration-500 ease-out ${
+            isVisibleWithAnimation
+              ? "opacity-100 translate-y-0" // Visible and animated
+              : "opacity-0 translate-y-10" // Hidden with slide down and fade out
+          }`}
+        >
           <div className="rounded-xl shadow-lg bg-white overflow-hidden">
             {/* Header */}
             <div className="bg-blue-600 rounded-t-xl px-4 py-3 relative">
@@ -25,7 +50,7 @@ const VehiclePriceResultModal = ({ isVisible, onClose }) => {
                 Get Your Vehicle Price
               </h2>
               <CloseOutlined
-                onClick={onClose}
+                onClick={handleClose}
                 className="text-white absolute top-3 right-4 text-lg cursor-pointer hover:text-gray-200"
               />
             </div>
