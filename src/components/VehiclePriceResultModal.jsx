@@ -1,0 +1,81 @@
+import React, { useState } from "react";
+import { CloseOutlined } from "@ant-design/icons";
+import SellVehicleModal from "./SellVehicleModal";
+
+const VehiclePriceResultModal = ({ isVisible, onClose }) => {
+  const [isSellModalVisible, setIsSellModalVisible] = useState(false);
+
+  const handleSellVehicleModalOpen = () => {
+    setIsSellModalVisible(true);
+    onClose(); // Close this modal when opening Sell modal
+  };
+
+  const handleSellVehicleModalClose = () => {
+    setIsSellModalVisible(false);
+  };
+
+  return (
+    <>
+      {isVisible && (
+        <div className="fixed bottom-4 right-4 z-50 w-[360px] max-w-md">
+          <div className="rounded-xl shadow-lg bg-white overflow-hidden">
+            {/* Header */}
+            <div className="bg-blue-600 rounded-t-xl px-4 py-3 relative">
+              <h2 className="text-white font-semibold text-lg text-center">
+                Get Your Vehicle Price
+              </h2>
+              <CloseOutlined
+                onClick={onClose}
+                className="text-white absolute top-3 right-4 text-lg cursor-pointer hover:text-gray-200"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="bg-white px-6 py-4 rounded-b-xl">
+              <p className="text-black font-semibold text-base mb-1">Price for your car</p>
+              <p className="text-sm mb-1">With Kilometer Driven: 8 Km</p>
+              <p className="text-sm mb-4">Including Specs: xxxxxx</p>
+
+              <div className="mb-4">
+                <p className="font-bold mb-1">Wholesale Value</p>
+                <input
+                  type="text"
+                  className="w-full border rounded px-3 py-2 text-sm"
+                  placeholder="$ XX,XXX - $ XX,XXX"
+                  readOnly
+                />
+              </div>
+
+              <div className="mb-4">
+                <p className="font-bold mb-1">Retail Value</p>
+                <input
+                  type="text"
+                  className="w-full border rounded px-3 py-2 text-sm"
+                  placeholder="$ XX,XXX - $ XX,XXX"
+                  readOnly
+                />
+              </div>
+
+              <button
+                onClick={handleSellVehicleModalOpen}
+                className="w-full bg-green-600 hover:bg-green-700 text-white text-sm py-2 rounded"
+              >
+                Would you like to sell your vehicle now?
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SellVehicleModal */}
+      {isSellModalVisible && (
+        <SellVehicleModal
+          isVisible={isSellModalVisible}
+          onClose={handleSellVehicleModalClose}
+        />
+      )}
+    </>
+  );
+};
+
+export default VehiclePriceResultModal;
