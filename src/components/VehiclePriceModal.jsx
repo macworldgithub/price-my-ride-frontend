@@ -11,23 +11,21 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
   const [retail, setRetail] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [isVisibleWithAnimation, setIsVisibleWithAnimation] = useState(false);
+  const [vehicleDetails, setVehicleDetails] = useState({});
 
-  // Handle showing the modal with fade-in and slide-up
   useEffect(() => {
     if (isVisible) {
-      setIsVisibleWithAnimation(true); // Start the animation when the modal is shown
+      setIsVisibleWithAnimation(true);
     } else {
-      // If modal is hidden, use a timeout to ensure the modal fades out and slides down before removing from DOM
-      setTimeout(() => setIsVisibleWithAnimation(false), 500); // Animation duration must match
+      setTimeout(() => setIsVisibleWithAnimation(false), 500);
     }
   }, [isVisible]);
 
-  // Handle the close action with fade-out and slide-down
   const handleClose = () => {
-    setIsVisibleWithAnimation(false); // Start fade-out and slide-down animation
+    setIsVisibleWithAnimation(false);
     setTimeout(() => {
-      onClose(); // Close modal after the animation
-    }, 500); // Match this with the fade-out duration
+      onClose();
+    }, 500);
   };
 
   const handleSubmit = async () => {
@@ -41,8 +39,10 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       retail,
     };
 
+    setVehicleDetails(payload);  // Save vehicle details for second modal
+
     try {
-      const response = await fetch("http://localhost:5000/controller/RecordsController", {
+      const response = await fetch("http://localhost:3000/api/record/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,26 +63,19 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       alert("Failed to connect to the server.");
     }
 
-    onClose(); // Close modal after submission
+    onClose();
   };
 
   return (
     <>
       {isVisible && (
         <div
-          className={`fixed bottom-4 right-4 z-50 w-[420px] max-w-sm transition-all duration-500 ease-out ${
-            isVisibleWithAnimation
-              ? "opacity-100 translate-y-0" // Visible and animated
-              : "opacity-0 translate-y-10" // Hidden with slide down and fade out
-          }`}
+          className={`fixed bottom-4 right-4 z-50 w-[420px] max-w-sm transition-all duration-500 ease-out ${isVisibleWithAnimation ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
         >
           <div className="rounded-xl shadow-lg bg-white overflow-hidden">
             <div className="relative mb-6 px-4 pt-4">
               <div className="absolute inset-x-0 top-0 h-12 bg-blue-600 rounded-t-xl" />
-              <button
-                onClick={handleClose}
-                className="absolute top-2 right-3 text-white text-xl font-bold z-20"
-              >
+              <button onClick={handleClose} className="absolute top-2 right-3 text-white text-xl font-bold z-20">
                 &times;
               </button>
               <h2 className="relative text-2xl font-bold text-white text-center z-10">
@@ -148,6 +141,7 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       <VehiclePriceResultModal
         isVisible={showResult}
         onClose={() => setShowResult(false)}
+        vehicleDetails={vehicleDetails}  // Passing the vehicle details to second modal
       />
     </>
   );

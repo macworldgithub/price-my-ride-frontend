@@ -1,99 +1,139 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
 
-const SellVehicleModal = ({ isVisible, onClose }) => {
+const SellVehicleModal = ({ isVisible, onClose, vehicleData }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [isVisibleWithAnimation, setIsVisibleWithAnimation] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null); // toast message
+  const [messageType, setMessageType] = useState("success"); // or 'error'
 
-  // Handle showing the modal with fade-in and slide-up
-  useEffect(() => {
-    if (isVisible) {
-      setIsVisibleWithAnimation(true); // Start the animation when modal becomes visible
-    } else {
-      // If modal is hidden, use a timeout to ensure the modal fades out and slides down before removing from DOM
-      setTimeout(() => setIsVisibleWithAnimation(false), 500); // Animation duration must match
-    }
-  }, [isVisible]);
-
-  // Handle the close action with fade-out and slide-down
   const handleClose = () => {
-    setIsVisibleWithAnimation(false); // Start fade-out and slide-down animation
-    setTimeout(() => {
-      onClose(); // Close modal after animation
-    }, 500); // Match this with the fade-out duration
+    setName("");
+    setEmail("");
+    setPhone("");
+    setMessage(null);
+    onClose();
   };
 
-  const handleSubmit = () => {
-    console.log({ name, email, phone });
-    handleClose();
+  const showToast = (text, type = "success") => {
+    setMessage(text);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
+  const handleSubmit = async () => {
+    if (!name || !email || !phone) {
+      showToast("Please fill all fields before submitting.", "error");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:3000/api/email/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          modal: vehicleData?.modal || "N/A",
+          make: vehicleData?.make || "N/A",
+          odometer: vehicleData?.odometer || "N/A",
+          buildYear: vehicleData?.buildYear || "N/A",
+          specs: vehicleData?.specs || "N/A",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showToast("Details sent to admin successfully!", "success");
+        handleClose();
+      } else {
+        showToast(data.message || "Failed to send details.", "error");
+      }
+    } catch (error) {
+      showToast("Something went wrong. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div
-      className={`fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center ${
-        isVisibleWithAnimation
-          ? "opacity-100 translate-y-0" // Visible with fade-in and slide-up
-          : "opacity-0 translate-y-10" // Hidden with fade-out and slide-down
-      } transition-all duration-500 ease-out`}
+    <Modal
+      open={isVisible}
+      onCancel={handleClose}
+      footer={null}
+      centered
+      maskClosable
+      width={420}
+      bodyStyle={{
+        padding: "30px",
+        borderRadius: "12px",
+        backgroundColor: "#fff",
+      }}
     >
-      <Modal
-        open={isVisible}
-        onCancel={handleClose}
-        footer={null}
-        centered // ✅ Ensures modal appears in the center of the screen
-        closable
-        maskClosable
-        width={420}
-        bodyStyle={{
-          padding: "30px",
-          borderRadius: "12px",
-          backgroundColor: "#fff",
-        }}
-      >
-        <h2 className="text-xl font-bold text-center mb-6">Enter Your Details</h2>
+      <h2 className="text-xl font-bold text-center mb-6">Enter Your Details</h2>
 
-        <div className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Name"
-            className="border border-black rounded px-4 py-2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="border border-black rounded px-4 py-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            className="border border-black rounded px-4 py-2"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-
-          <div className="flex justify-between mt-6">
-            <button
-              onClick={handleClose}
-              className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-            >
-              Submit
-            </button>
-          </div>
+      {/* Tailwind Toast Message */}
+      {message && (
+        <div
+          className={`text-white px-4 py-2 rounded mb-4 text-center ${
+            messageType === "success" ? "bg-green-600" : "bg-red-600"
+          }`}
+        >
+          {message}
         </div>
-      </Modal>
-    </div>
+      )}
+
+      <div className="flex flex-col gap-4">
+        <input
+          type="text"
+          placeholder="Name"
+          className="border border-black rounded px-4 py-2"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          className="border border-black rounded px-4 py-2"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          className="border border-black rounded px-4 py-2"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handleClose}
+            className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className={`${
+              loading ? "bg-blue-300" : "bg-blue-600 hover:bg-blue-700"
+            } text-white px-6 py-2 rounded`}
+          >
+            {loading ? "Sending..." : "Submit"}
+          </button>
+        </div>
+      </div>
+    </Modal>
   );
 };
 

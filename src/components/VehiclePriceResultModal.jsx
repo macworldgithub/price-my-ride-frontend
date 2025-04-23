@@ -2,31 +2,65 @@ import React, { useState, useEffect } from "react";
 import { CloseOutlined } from "@ant-design/icons";
 import SellVehicleModal from "./SellVehicleModal";
 
-const VehiclePriceResultModal = ({ isVisible, onClose }) => {
+const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
   const [isSellModalVisible, setIsSellModalVisible] = useState(false);
   const [isVisibleWithAnimation, setIsVisibleWithAnimation] = useState(false);
+  const [retailPrice, setRetailPrice] = useState("");
+  const [wholesalePrice, setWholesalePrice] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  // Handle showing the modal with fade-in and slide-up
   useEffect(() => {
     if (isVisible) {
-      setIsVisibleWithAnimation(true); // Start the animation when the modal is shown
+      setIsVisibleWithAnimation(true);
+      fetchPrice();
     } else {
-      // If modal is hidden, use a timeout to ensure the modal fades out and slides down before removing from DOM
-      setTimeout(() => setIsVisibleWithAnimation(false), 500); // Animation duration must match
+      setTimeout(() => setIsVisibleWithAnimation(false), 500);
     }
   }, [isVisible]);
 
-  // Handle the close action with fade-out and slide-down
+  const fetchPrice = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMsg("");
+
+      const response = await fetch("http://localhost:3000/api/predict/price", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(vehicleDetails),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Backend Error:", errorText);
+        throw new Error("Failed to fetch prices");
+      }
+
+      const data = await response.json();
+      console.log("Price API Response:", data);
+
+      setRetailPrice(data.retail_price ?? "N/A");
+      setWholesalePrice(data.wholesale_price ?? "N/A");
+    } catch (error) {
+      console.error("Fetch error:", error);
+      setErrorMsg("Error fetching vehicle price.");
+      setRetailPrice("N/A");
+      setWholesalePrice("N/A");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleClose = () => {
-    setIsVisibleWithAnimation(false); // Start fade-out and slide-down animation
+    setIsVisibleWithAnimation(false);
     setTimeout(() => {
-      onClose(); // Close modal after the animation
-    }, 500); // Match this with the fade-out duration
+      onClose();
+    }, 500);
   };
 
   const handleSellVehicleModalOpen = () => {
     setIsSellModalVisible(true);
-    handleClose(); // Close this modal when opening Sell modal
+    handleClose();
   };
 
   const handleSellVehicleModalClose = () => {
@@ -39,12 +73,11 @@ const VehiclePriceResultModal = ({ isVisible, onClose }) => {
         <div
           className={`fixed bottom-4 right-4 z-50 w-[360px] max-w-md transition-all duration-500 ease-out ${
             isVisibleWithAnimation
-              ? "opacity-100 translate-y-0" // Visible and animated
-              : "opacity-0 translate-y-10" // Hidden with slide down and fade out
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
           }`}
         >
           <div className="rounded-xl shadow-lg bg-white overflow-hidden">
-            {/* Header */}
             <div className="bg-blue-600 rounded-t-xl px-4 py-3 relative">
               <h2 className="text-white font-semibold text-lg text-center">
                 Get Your Vehicle Price
@@ -55,18 +88,22 @@ const VehiclePriceResultModal = ({ isVisible, onClose }) => {
               />
             </div>
 
-            {/* Content */}
             <div className="bg-white px-6 py-4 rounded-b-xl">
               <p className="text-black font-semibold text-base mb-1">Price for your car</p>
-              <p className="text-sm mb-1">With Kilometer Driven: 8 Km</p>
-              <p className="text-sm mb-4">Including Specs: xxxxxx</p>
+              <p className="text-sm mb-1">With Kilometer Driven: {vehicleDetails.odometer} Km</p>
+              <p className="text-sm mb-4">Including Specs: {vehicleDetails.specifications}</p>
+
+              {errorMsg && (
+                <p className="text-red-600 text-sm font-semibold mb-2">{errorMsg}</p>
+              )}
 
               <div className="mb-4">
                 <p className="font-bold mb-1">Wholesale Value</p>
                 <input
                   type="text"
                   className="w-full border rounded px-3 py-2 text-sm"
-                  placeholder="$ XX,XXX - $ XX,XXX"
+                  placeholder="Fetching..."
+                  value={isLoading ? "Fetching..." : wholesalePrice}
                   readOnly
                 />
               </div>
@@ -76,7 +113,8 @@ const VehiclePriceResultModal = ({ isVisible, onClose }) => {
                 <input
                   type="text"
                   className="w-full border rounded px-3 py-2 text-sm"
-                  placeholder="$ XX,XXX - $ XX,XXX"
+                  placeholder="Fetching..."
+                  value={isLoading ? "Fetching..." : retailPrice}
                   readOnly
                 />
               </div>
@@ -92,7 +130,6 @@ const VehiclePriceResultModal = ({ isVisible, onClose }) => {
         </div>
       )}
 
-      {/* SellVehicleModal */}
       {isSellModalVisible && (
         <SellVehicleModal
           isVisible={isSellModalVisible}
