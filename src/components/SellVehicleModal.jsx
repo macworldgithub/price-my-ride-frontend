@@ -34,7 +34,7 @@ const SellVehicleModal = ({ isVisible, onClose, vehicleData }) => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/email/send", {
+      const response = await fetch("https://price-my-ride-backend.vercel.app/api/email/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
