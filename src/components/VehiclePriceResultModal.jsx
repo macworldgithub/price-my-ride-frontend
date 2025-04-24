@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CloseOutlined } from "@ant-design/icons";
 import SellVehicleModal from "./SellVehicleModal";
+import config from "../../config";
 
 const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
   const [isSellModalVisible, setIsSellModalVisible] = useState(false);
@@ -24,7 +25,7 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
       setIsLoading(true);
       setErrorMsg("");
 
-      const response = await fetch("https://price-my-ride-backend.vercel.app/api/predict/price", {
+      const response = await fetch("${config.backendUrl}/api/predict/price", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(vehicleDetails),

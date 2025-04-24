@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import VehiclePriceResultModal from "./VehiclePriceResultModal";
+import config from "../../config";
 
 const VehiclePriceModal = ({ isVisible, onClose }) => {
   const [buildYear, setBuildYear] = useState("");
@@ -39,10 +40,10 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       retail,
     };
 
-    setVehicleDetails(payload);  // Save vehicle details for second modal
+    setVehicleDetails(payload); 
 
     try {
-      const response = await fetch("https://price-my-ride-backend.vercel.app/api/record/create", {
+      const response = await fetch("${config.backendUrl}/api/record/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

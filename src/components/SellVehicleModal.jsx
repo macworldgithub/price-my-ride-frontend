@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "antd";
+import config from "../../config";
 
 const SellVehicleModal = ({ isVisible, onClose, vehicleData }) => {
   const [name, setName] = useState("");
@@ -34,7 +35,7 @@ const SellVehicleModal = ({ isVisible, onClose, vehicleData }) => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://price-my-ride-backend.vercel.app/api/email/send", {
+      const response = await fetch("${config.backendUrl}/api/email/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
