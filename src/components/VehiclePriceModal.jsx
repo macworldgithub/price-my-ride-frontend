@@ -43,7 +43,8 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
     setVehicleDetails(payload); 
 
     try {
-      const response = await fetch("${config.backendUrl}/api/record/create", {
+      const backendUrl = config.backendUrl.endsWith('/') ? config.backendUrl : `${config.backendUrl}/`;
+const response = await fetch(`${backendUrl}api/record/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -35,7 +35,8 @@ const SellVehicleModal = ({ isVisible, onClose, vehicleData }) => {
     setLoading(true);
 
     try {
-      const response = await fetch("${config.backendUrl}/api/email/send", {
+      const backendUrl = config.backendUrl.endsWith('/') ? config.backendUrl : `${config.backendUrl}/`;
+      const response = await fetch(`${backendUrl}api/email/send`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

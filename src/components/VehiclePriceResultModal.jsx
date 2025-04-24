@@ -25,7 +25,8 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
       setIsLoading(true);
       setErrorMsg("");
 
-      const response = await fetch("${config.backendUrl}/api/predict/price", {
+      const backendUrl = config.backendUrl.endsWith('/') ? config.backendUrl : `${config.backendUrl}/`;
+      const response = await fetch(`${backendUrl}api/predict/price`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(vehicleDetails),

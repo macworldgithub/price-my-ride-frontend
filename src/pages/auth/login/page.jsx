@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import image from "../../../../public/pricemyride.jpg"
+import image from "../../../../public/pricemyride.png"
 import axios from "axios";
 import { SERVER_URL } from "../../../config";
 import { useNavigate } from "react-router-dom";
