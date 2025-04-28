@@ -114,7 +114,7 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
                 value={specification}
                 onChange={(e) => setSpecification(e.target.value)}
               />
-              <input
+              {/* <input
                 className="border border-gray-300 rounded px-4 py-2 text-sm shadow-md focus:ring-2 focus:ring-blue-600"
                 placeholder="Wholesale Price Range (e.g. $1000 - $2000)"
                 value={wholesale}
@@ -125,7 +125,7 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
                 placeholder="Retail Price Range (e.g. $1500 - $2500)"
                 value={retail}
                 onChange={(e) => setRetail(e.target.value)}
-              />
+              /> */}
 
               <button
                 onClick={handleSubmit}

@@ -39,28 +39,31 @@ const PriceMyRide = () => {
         </div>
       </div>
 
-      {/* Calculator Box */}
-      <div className="absolute bottom-6 right-6 group w-[110px] h-[130px] bg-[#277ec5] hover:bg-blue-300 rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300">
-        <div
-          onClick={() => setIsModalVisible(true)}
-          className="absolute bottom-33 right-15 bg-[#3da4fb] text-white text-sm md:text-base w-[14rem] px-2 py-2 text-center  rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
-        >
-          Calculator Price
-        </div>
-        <img
-          src="./calculator-icon.png"
-          alt="Calculator Icon"
-          className="w-[80px] h-[110px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        />
-      </div>
+     {/* Calculator Box */}
+<div className="absolute bottom-6 right-6 group w-[110px] h-[130px] bg-[#277ec5] hover:bg-blue-300 rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300">
+  <div
+    onClick={() => setIsModalVisible(true)}
+    className="absolute bottom-33 right-15 bg-[#3da4fb] text-white text-sm md:text-base w-[14rem] px-2 py-2 text-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg"
+  >
+    Calculator Price
+  </div>
 
-      {/* Modal */}
-      <div className="absolute bottom-40">
-        <VehiclePriceModal
-          isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-        />
-      </div>
+  {/* IMAGE WILL ALWAYS BE VISIBLE */}
+  <img
+    src="./calculator-icon.png"
+    alt="Calculator Icon"
+    className="w-[80px] h-[110px] transition-all duration-300"
+  />
+</div>
+
+{/* Modal */}
+<div className="absolute bottom-40">
+  <VehiclePriceModal
+    isVisible={isModalVisible}
+    onClose={() => setIsModalVisible(false)}
+  />
+</div>
+
     </section>
   );
 };
