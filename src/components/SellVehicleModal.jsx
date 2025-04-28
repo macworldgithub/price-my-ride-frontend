@@ -7,8 +7,8 @@ const SellVehicleModal = ({ isVisible, onClose, vehicleData }) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null); // toast message
-  const [messageType, setMessageType] = useState("success"); // or 'error'
+  const [message, setMessage] = useState(null); 
+  const [messageType, setMessageType] = useState("success"); 
 
   const handleClose = () => {
     setName("");
