@@ -126,6 +126,7 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
                 className="w-full bg-green-600 hover:bg-green-700 text-white text-sm py-2 rounded"
               >
                 Would you like to sell your vehicle now?
+                yes
               </button>
             </div>
           </div>
