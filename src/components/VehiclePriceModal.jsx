@@ -54,7 +54,7 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       const backendUrl = config.backendUrl.endsWith("/")
         ? config.backendUrl
         : `${config.backendUrl}/`;
-      const response = await fetch(`${backendUrl}api/record/create`, {
+      const res = await fetch(`${backendUrl}api/record/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
