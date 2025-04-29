@@ -8,11 +8,10 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
   const [model, setModel] = useState("");
   const [odometer, setOdometer] = useState("");
   const [specification, setSpecification] = useState("");
-  const [wholesale, setWholesale] = useState("");
-  const [retail, setRetail] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [isVisibleWithAnimation, setIsVisibleWithAnimation] = useState(false);
   const [vehicleDetails, setVehicleDetails] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isVisible) {
@@ -24,47 +23,52 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
 
   const handleClose = () => {
     setIsVisibleWithAnimation(false);
-    setTimeout(() => {
-      onClose();
-    }, 500);
+    setTimeout(onClose, 500);
   };
 
   const handleSubmit = async () => {
+    // Frontend validation
+    if (!buildYear || !make || !model || !odometer || !specification) {
+      alert("Please fill all required fields: Build Year, Make, Model, Odometer, Specification .");
+      return;
+    }
+    if (isNaN(buildYear) || isNaN(odometer)) {
+      alert("Build Year and Odometer must be numeric.");
+      return;
+    }
+
     const payload = {
-      year: buildYear,
-      make,
-      model,
-      odometer,
-      specifications: specification,
-      wholesale,
-      retail,
+      year: buildYear.trim(),
+      make: make.trim(),
+      model: model.trim(),
+      odometer: odometer.trim(),
+      specifications: specification.trim(),
     };
 
-    setVehicleDetails(payload); 
+    setVehicleDetails(payload);
+    setLoading(true);
 
     try {
-      const backendUrl = config.backendUrl.endsWith('/') ? config.backendUrl : `${config.backendUrl}/`;
+      const backendUrl = config.backendUrl.endsWith("/") ? config.backendUrl : `${config.backendUrl}/`;
       const response = await fetch(`${backendUrl}api/record/create`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      const data = await res.json();
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (res.ok) {
         console.log("✅ Record added successfully:", data);
         setShowResult(true);
       } else {
-        alert(`❌ Error: ${data.error || "Something went wrong!"}`);
+        alert(`Error: ${data.error || "Something went wrong!"}`);
       }
-    } catch (error) {
-      console.error("🚨 API Error:", error);
+    } catch (err) {
+      console.error("API Error:", err);
       alert("Failed to connect to the server.");
     }
 
+    setLoading(false);
     onClose();
   };
 
@@ -72,12 +76,17 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
     <>
       {isVisible && (
         <div
-          className={`fixed bottom-4 right-4 z-50 w-[420px] max-w-sm transition-all duration-500 ease-out ${isVisibleWithAnimation ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          className={`fixed bottom-4 right-4 z-50 w-[420px] max-w-sm transition-all duration-500 ease-out ${
+            isVisibleWithAnimation ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
         >
           <div className="rounded-xl shadow-lg bg-white overflow-hidden">
             <div className="relative mb-6 px-4 pt-4">
               <div className="absolute inset-x-0 top-0 h-12 bg-blue-600 rounded-t-xl" />
-              <button onClick={handleClose} className="absolute top-2 right-3 text-white text-xl font-bold z-20">
+              <button
+                onClick={handleClose}
+                className="absolute top-2 right-3 text-white text-xl font-bold z-20"
+              >
                 &times;
               </button>
               <h2 className="relative text-2xl font-bold text-white text-center z-10">
@@ -116,24 +125,14 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
                 value={specification}
                 onChange={(e) => setSpecification(e.target.value)}
               />
-              {/* <input
-                className="border border-gray-300 rounded px-4 py-2 text-sm shadow-md focus:ring-2 focus:ring-blue-600"
-                placeholder="Wholesale Price Range (e.g. $1000 - $2000)"
-                value={wholesale}
-                onChange={(e) => setWholesale(e.target.value)}
-              />
-              <input
-                className="border border-gray-300 rounded px-4 py-2 text-sm shadow-md focus:ring-2 focus:ring-blue-600"
-                placeholder="Retail Price Range (e.g. $1500 - $2500)"
-                value={retail}
-                onChange={(e) => setRetail(e.target.value)}
-              /> */}
-
               <button
                 onClick={handleSubmit}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm mt-2"
+                disabled={loading}
+                className={`bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm mt-2 ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Get Price
+                {loading ? "fetching..." : "Get Price"}
               </button>
             </div>
           </div>
@@ -143,7 +142,7 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       <VehiclePriceResultModal
         isVisible={showResult}
         onClose={() => setShowResult(false)}
-        vehicleDetails={vehicleDetails}  // Passing the vehicle details to second modal
+        vehicleDetails={vehicleDetails}
       />
     </>
   );

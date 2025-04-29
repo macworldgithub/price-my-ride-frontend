@@ -25,7 +25,9 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
       setIsLoading(true);
       setErrorMsg("");
 
-      const backendUrl = config.backendUrl.endsWith('/') ? config.backendUrl : `${config.backendUrl}/`;
+      const backendUrl = config.backendUrl.endsWith("/")
+        ? config.backendUrl
+        : `${config.backendUrl}/`;
       const response = await fetch(`${backendUrl}api/predict/price`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,12 +93,20 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
             </div>
 
             <div className="bg-white px-6 py-4 rounded-b-xl">
-              <p className="text-black font-semibold text-base mb-1">Price for your car</p>
-              <p className="text-sm mb-1">With Kilometer Driven: {vehicleDetails.odometer} Km</p>
-              <p className="text-sm mb-4">Including Specs: {vehicleDetails.specifications}</p>
+              <p className="text-black font-semibold text-base mb-1">
+                Price for your car
+              </p>
+              <p className="text-sm mb-1">
+                With Kilometer Driven: {vehicleDetails.odometer} Km
+              </p>
+              <p className="text-sm mb-4">
+                Including Specs: {vehicleDetails.specifications}
+              </p>
 
               {errorMsg && (
-                <p className="text-red-600 text-sm font-semibold mb-2">{errorMsg}</p>
+                <p className="text-red-600 text-sm font-semibold mb-2">
+                  {errorMsg}
+                </p>
               )}
 
               <div className="mb-4">
@@ -126,7 +136,6 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
                 className="w-full bg-green-600 hover:bg-green-700 text-white text-sm py-2 rounded"
               >
                 Would you like to sell your vehicle now?
-                yes
               </button>
             </div>
           </div>
