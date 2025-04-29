@@ -39,7 +39,7 @@ const PriceMyRide = () => {
         </div>
       </div>
 
-     {/* Calculator Box */}
+  {/* Calculator Box */}
 <div className="absolute bottom-6 right-6 group w-[110px] h-[130px] bg-[#277ec5] hover:bg-blue-300 rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300">
   {/* Text Box that will only show on hover */}
   <div
@@ -48,11 +48,12 @@ const PriceMyRide = () => {
   >
     Calculator Price
   </div>
-  
-  {/* Calculator Image that stays visible */}
+
+  {/* Calculator Image that opens modal on click */}
   <img
     src="./calculator-icon.png"
     alt="Calculator Icon"
+    onClick={() => setIsModalVisible(true)}  // <-- Add this
     className="w-[80px] h-[110px] transition-all duration-300"
   />
 </div>
