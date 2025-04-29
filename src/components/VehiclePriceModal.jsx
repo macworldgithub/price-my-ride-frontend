@@ -29,7 +29,9 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
   const handleSubmit = async () => {
     // Frontend validation
     if (!buildYear || !make || !model || !odometer || !specification) {
-      alert("Please fill all required fields: Build Year, Make, Model, Odometer, Specification .");
+      alert(
+        "Please fill all required fields: Build Year, Make, Model, Odometer, Specification ."
+      );
       return;
     }
     if (isNaN(buildYear) || isNaN(odometer)) {
@@ -49,7 +51,9 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
     setLoading(true);
 
     try {
-      const backendUrl = config.backendUrl.endsWith("/") ? config.backendUrl : `${config.backendUrl}/`;
+      const backendUrl = config.backendUrl.endsWith("/")
+        ? config.backendUrl
+        : `${config.backendUrl}/`;
       const response = await fetch(`${backendUrl}api/record/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,7 +62,7 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       const data = await res.json();
 
       if (res.ok) {
-        console.log("✅ Record added successfully:", data);
+        console.log(" Record added successfully:", data);
         setShowResult(true);
       } else {
         alert(`Error: ${data.error || "Something went wrong!"}`);
@@ -77,7 +81,9 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
       {isVisible && (
         <div
           className={`fixed bottom-4 right-4 z-50 w-[420px] max-w-sm transition-all duration-500 ease-out ${
-            isVisibleWithAnimation ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            isVisibleWithAnimation
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
           }`}
         >
           <div className="rounded-xl shadow-lg bg-white overflow-hidden">
