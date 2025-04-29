@@ -28,9 +28,9 @@ const VehiclePriceModal = ({ isVisible, onClose }) => {
 
   const handleSubmit = async () => {
     // Frontend validation
-    if (!buildYear || !make || !model || !odometer || !specification) {
+    if (!buildYear || !make || !model || !odometer) {
       alert(
-        "Please fill all required fields: Build Year, Make, Model, Odometer, Specification ."
+        "Please fill all required fields: Build Year, Make, Model, Odometer."
       );
       return;
     }
