@@ -62,6 +62,10 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
     }, 500);
   };
 
+  const handleResetValuation = () => {
+    window.location.reload();
+  };
+
   const handleSellVehicleModalOpen = () => {
     setIsSellModalVisible(true);
     handleClose();
@@ -136,6 +140,12 @@ const VehiclePriceResultModal = ({ isVisible, onClose, vehicleDetails }) => {
                 className="w-full bg-green-600 hover:bg-green-700 text-white text-sm py-2 rounded"
               >
                 Would you like to sell your vehicle now?
+              </button>
+              <button
+                onClick={handleResetValuation}
+                className="w-full mt-2 bg-red-600 hover:bg-red-700 text-white text-sm py-2 rounded"
+              >
+                Get another valuation
               </button>
             </div>
           </div>
