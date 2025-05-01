@@ -8,7 +8,7 @@ const PriceMyRide = () => {
     <section
       className="relative min-h-screen w-full bg-cover bg-center flex items-start justify-center pt-10"
       style={{
-        backgroundImage: "url('./background.png')",
+        backgroundImage: "url('./background.avif')",
       }}
     >
       {/* CONTAINER WRAPPER */}
